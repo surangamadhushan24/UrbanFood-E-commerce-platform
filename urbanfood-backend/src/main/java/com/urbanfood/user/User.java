@@ -1,9 +1,23 @@
 package com.urbanfood.user;
 
+import com.urbanfood.product.Product;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-@Document(collation = "users")
-public class User {
+import java.util.Collection;
+import java.util.List;
+
+@Document(collection = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
 
     private String id;
     private String name;
@@ -11,73 +25,43 @@ public class User {
     private String phone;
     private String password;
     private String address;
+    private List<Product> products;
     private Role role;
 
-    public User() {}
 
-    public User(String id, String name, String email, String phone, String password, String address, Role role) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.password = password;
-        this.address = address;
-        this.role = role;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(() -> role.name());
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
+    @Override
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+
+    @Override
+    public String getUsername() {
+        return email  ;
     }
 
-    public String getAddress() {
-        return address;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public Role getRole() {
-        return role;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

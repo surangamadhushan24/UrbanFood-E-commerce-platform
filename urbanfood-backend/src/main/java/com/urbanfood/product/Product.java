@@ -1,5 +1,14 @@
 package com.urbanfood.product;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     private String id;
@@ -8,6 +17,9 @@ public class Product {
     private String category;
     private Double price;
     private Integer stock;
+
+
+
 
     
 }
