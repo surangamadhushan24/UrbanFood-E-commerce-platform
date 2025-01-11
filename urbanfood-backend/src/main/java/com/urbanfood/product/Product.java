@@ -21,7 +21,9 @@ public class Product {
     private String category;
     private Double price;
     private String supplierId;
+    private String image;
     private Integer stock;
+
 
 
 
