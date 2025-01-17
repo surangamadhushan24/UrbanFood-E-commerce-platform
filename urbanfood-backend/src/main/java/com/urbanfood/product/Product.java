@@ -25,8 +25,5 @@ public class Product {
     private Integer stock;
 
 
-
-
-
     
 }
