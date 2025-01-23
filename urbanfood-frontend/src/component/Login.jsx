@@ -12,6 +12,7 @@ function Login() {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:8080/login', { email, password });
+            localStorage.setItem('token',response.data.token)
             history('/dashboard');
         } catch (error) {
             console.error(error);

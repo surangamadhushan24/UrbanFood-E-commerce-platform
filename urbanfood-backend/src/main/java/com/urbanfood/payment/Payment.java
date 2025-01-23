@@ -1,6 +1,5 @@
-package com.urbanfood.cart;
+package com.urbanfood.payment;
 
-import com.urbanfood.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,21 +7,18 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Document(collection = "cart")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cart {
-
+@Document(collection = "payment")
+public class Payment {
 
     @Id
     private String id;
-    private Double totalAmount=0.0;
-    private List<Product> products = new ArrayList<>();
-    private String userId;
+    private String customerId;
+    private String paymentDate;
+    private Double amount;
+    private String paymentMethod;
 
 }
