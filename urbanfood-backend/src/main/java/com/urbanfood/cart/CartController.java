@@ -4,6 +4,7 @@ import com.urbanfood.product.Product;
 import com.urbanfood.user.JwtService;
 import com.urbanfood.user.User;
 import com.urbanfood.user.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,29 +24,67 @@ public class CartController {
         this.userRepository = userRepository;
     }
 
-
     @PostMapping("api/v1/cart")
-    ResponseEntity<Cart> createCart( @RequestHeader("Authorization") String token,@RequestBody Product product) {
+    public ResponseEntity<Cart> createCart(@RequestHeader("Authorization") String token, @RequestBody Product product) {
+        try {
+            // Find the user from the token
+            User user = findCartCustomerId(token)
+                    .orElseThrow(() -> new RuntimeException("User not found for token: " + token));
 
+            // Get the user ID
+            String userId = user.getId(); // Assuming User has a method like getId()
 
-        Optional<User> userId = findCartCustomerId(token);
-        cartService.createCart(product, String.valueOf(userId));
-        return ResponseEntity.ok().build();
-
+            // Create the cart with the user ID
+            Cart cart = cartService.createCart(product, userId);
+            return ResponseEntity.ok(cart); // Return the updated cart
+        } catch (RuntimeException e) {
+            System.out.println("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-     @GetMapping("api/v1/cart/count")
-     ResponseEntity<Integer> getCartCount(@RequestHeader("Authorization") String token) {
-         Optional<User> userId = findCartCustomerId(token);
-         int count = cartService.cartItemCount(String.valueOf(userId));
-         return ResponseEntity.ok(count);
-        }
+    @GetMapping("/api/v1/cart")
+    public ResponseEntity<Cart> getCart(@RequestHeader("Authorization") String token) {
+        try {
+            User user = findCartCustomerId(token)
+                    .orElseThrow(() -> new RuntimeException("User not found for token: " + token));
 
-//        public Optional<User> findCartCustomerId(String token){
-//            String userName = jwtService.extractUsername(token);
-//            return userRepository.findById(userName);
-//
-//        }
+            String userId = user.getId();
+            Cart cart = cartService.getCartByUserId(userId);
+            return ResponseEntity.ok(cart);
+        } catch (RuntimeException e) {
+            System.out.println("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("api/v1/cart/count")
+    public ResponseEntity<Integer> getCartCount(@RequestHeader("Authorization") String token) {
+        try {
+            // Find the user from the token
+            User user = findCartCustomerId(token)
+                    .orElseThrow(() -> new RuntimeException("User not found for token: " + token));
+
+            // Get the user ID
+            String userId = user.getId();
+
+            // Get the cart item count for the user
+            int count = cartService.cartItemCount(userId);
+            return ResponseEntity.ok(count);
+        } catch (RuntimeException e) {
+            System.out.println("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     private Optional<User> findCartCustomerId(String token) {
         try {
@@ -64,7 +103,7 @@ public class CartController {
             }
 
             // Find the user in the repository
-            return userRepository.findById(userName);
+            return userRepository.findByEmail(userName);
         } catch (Exception e) {
             // Log the exception for debugging
             System.out.println("Error extracting user from token: " + e.getMessage());
@@ -72,6 +111,50 @@ public class CartController {
         }
     }
 
+    @DeleteMapping("api/v1/cart/remove/{productId}")
+    public ResponseEntity<Cart> removeFromCart(
+            @RequestHeader("Authorization") String token,
+            @PathVariable String productId
+    ) {
+        try {
+            // Find the user from the token
+            User user = findCartCustomerId(token)
+                    .orElseThrow(() -> new RuntimeException("User not found for token: " + token));
 
+            // Get the user ID
+            String userId = user.getId();
 
+            // Remove the product from the cart
+            Cart cart = cartService.removeFromCart(userId, productId);
+            return ResponseEntity.ok(cart);
+        } catch (RuntimeException e) {
+            System.out.println("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("api/v1/cart/clear")
+    public ResponseEntity<Void> clearCart(@RequestHeader("Authorization") String token) {
+        try {
+            // Find the user from the token
+            User user = findCartCustomerId(token)
+                    .orElseThrow(() -> new RuntimeException("User not found for token: " + token));
+
+            // Get the user ID
+            String userId = user.getId();
+
+            // Clear the cart
+            cartService.clearCart(userId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            System.out.println("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

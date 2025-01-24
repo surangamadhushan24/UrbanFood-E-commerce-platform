@@ -1,6 +1,6 @@
-package com.urbanfood.cart;
+package com.urbanfood.order;
 
-import com.urbanfood.product.Product;
+import com.urbanfood.payment.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,19 +8,22 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Document(collection = "cart")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cart {
+@Document(collection = "order")
+public class Order {
 
     @Id
     private String id;
-    private Double totalAmount = 0.0; // Ensure this is initialized to 0.0
-    private List<Product> products = new ArrayList<>();
-    private String userId;
+    private String customerId;
+    private List<String> productIds;
+    private String orderDate;
+    private Double totalAmount;
+    private Payment payment;
+    private String status;
+
 }

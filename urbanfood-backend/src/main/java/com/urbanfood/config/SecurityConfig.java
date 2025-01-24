@@ -44,9 +44,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**","/register/**","/api/v1/products")
+                        req->req.requestMatchers("/login/**","/register/**","/api/v1/products","/api/v1/products/{id}")
                                 .permitAll()
                                 .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/v1/add-products").hasAuthority("SUPPLIER")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailsServiceImp)

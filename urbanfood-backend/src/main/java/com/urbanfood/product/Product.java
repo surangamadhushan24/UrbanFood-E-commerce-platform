@@ -23,6 +23,7 @@ public class Product {
     private String supplierId;
     private String image;
     private Integer stock;
+    private Integer timesPurchased = 0;
 
 
     
