@@ -1,17 +1,23 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Navbar from './component/Navbar';
+import Home from './component/Home';
 import Login from './component/Login';
+import RegistrationForm from './component/RegistrationForm';
 import ProductListings from './component/ProductListings';
 import ProductDetail from './component/ProductDetail';
-import Navbar from './component/Navbar';
 import Cart from './component/Cart';
-import Payment from './component/Payment'; // Import the new Payment component
-import axios from 'axios';
+import Payment from './component/Payment';
 import MostPopularProducts from './component/MostPopularProducts';
-import RegistrationForm from './component/RegistrationForm';
 import AddProductForm from './component/AddProductForm';
 
+import axios from 'axios';
+
 function App() {
+    // Check if the user is authenticated
+    const isAuthenticated = !!localStorage.getItem('token');
+
+    // Define handleAddToCart function
     const handleAddToCart = async (product) => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -29,26 +35,85 @@ function App() {
             console.log('Backend Response:', response.data);
         } catch (error) {
             alert('Failed to add item to cart!');
-            console.log(error);
+            console.error(error);
         }
     };
 
     return (
         <Router>
+            {/* Navigation Bar */}
             <Navbar />
+
+            {/* Main Content */}
             <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/register" element={<RegistrationForm />}/>
-                <Route path="/dashboard" element={<ProductListings />} />
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<RegistrationForm />} />
+
+                {/* Protected Routes (Require Authentication) */}
+                <Route
+                    path="/dashboard"
+                    element={
+                        isAuthenticated ? (
+                            <ProductListings />
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
+                    }
+                />
                 <Route
                     path="/dashboard/:id"
-                    element={<ProductDetail handleAddToCart={handleAddToCart} />}
+                    element={
+                        isAuthenticated ? (
+                            <ProductDetail handleAddToCart={handleAddToCart} />
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
+                    }
                 />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/payment" element={<Payment />} /> 
-                <Route path="/most-popular" element={<MostPopularProducts />} />
-                <Route path="*" element={<h1>404 Not Found</h1>} />
-                <Route path="/add-product" element={<AddProductForm />} />
+                <Route
+                    path="/cart"
+                    element={
+                        isAuthenticated ? (
+                            <Cart />
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
+                    }
+                />
+                <Route
+                    path="/payment"
+                    element={
+                        isAuthenticated ? (
+                            <Payment />
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
+                    }
+                />
+                <Route
+                    path="/most-popular"
+                    element={
+                        isAuthenticated ? (
+                            <MostPopularProducts />
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
+                    }
+                />
+                <Route
+                    path="/add-product"
+                    element={
+                        isAuthenticated ? (
+                            <AddProductForm />
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
+                    }
+                />
+
+                
             </Routes>
         </Router>
     );

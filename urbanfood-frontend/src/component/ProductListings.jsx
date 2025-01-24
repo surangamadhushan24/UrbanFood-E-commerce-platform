@@ -1,33 +1,58 @@
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
-import Navbar from './Navbar';
 import Card from './Card';
 
 function ProductListings() {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        const fetchProduct = async () => {
+        const fetchProducts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/v1/products');
                 setProducts(response.data);
             } catch (error) {
-                console.log(error);
+                console.error('Error fetching products:', error);
             }
         };
 
-        fetchProduct();
+        fetchProducts();
     }, []);
 
+    // Define handleAddToCart function
+    const handleAddToCart = async (product) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login to add items to the cart!');
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/api/v1/cart',
+                product, // Pass the full product object
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            alert('Product added to cart!');
+            console.log('Backend Response:', response.data);
+        } catch (error) {
+            alert('Failed to add item to cart!');
+            console.error(error);
+        }
+    };
+
     return (
-        <>
-           
+        <div className="container mt-5">
+            <h1>Product Listings</h1>
             <div className="row row-cols-1 row-cols-md-3 g-4">
                 {products.map((product) => (
-                    <Card product={product} key={product.id} />
+                    <Card
+                        key={product.id}
+                        product={product}
+                        handleAddToCart={handleAddToCart} // Pass the function to Card
+                    />
                 ))}
             </div>
-        </>
+        </div>
     );
 }
 

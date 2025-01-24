@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FaCreditCard, FaMoneyCheckAlt, FaPaypal, FaCheckCircle } from 'react-icons/fa'; // Icons from React Icons
 
 function Payment() {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [orderDetails, setOrderDetails] = useState(null);
+    const [error, setError] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false); // Loading state for payment processing
     const navigate = useNavigate();
 
     const handlePayment = async () => {
+        setError(''); // Clear previous errors
+        setIsProcessing(true); // Set loading state
+
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -74,52 +80,74 @@ function Payment() {
             alert('Payment successful! Order created.');
         } catch (error) {
             console.error('Error during payment or order creation:', error);
-            alert('Failed to process payment or create order!');
+            setError('Failed to process payment or create order. Please try again.');
+        } finally {
+            setIsProcessing(false); // Reset loading state
         }
     };
 
     return (
-        <div className="container card p-5 mt-5">
-            <h1 className="text-center">Payment</h1>
-            {orderDetails ? (
-                <div>
-                    <h2>Order Details</h2>
-                    <p><strong>Order ID:</strong> {orderDetails.id}</p>
-                    <p><strong>Total Amount:</strong> ${orderDetails.totalAmount}</p>
-                    <p><strong>Status:</strong> {orderDetails.status}</p>
-                    <p><strong>Payment Method:</strong> {orderDetails.payment.paymentMethod}</p>
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => navigate('/dashboard')}
-                    >
-                        Continue Shopping
-                    </button>
-                </div>
-            ) : (
-                <div>
-                    <h2>Payment Details</h2>
-                    <div className="mb-3">
-                        <label className="form-label">Payment Method</label>
-                        <select
-                            className="form-select"
-                            value={paymentMethod}
-                            onChange={(e) => setPaymentMethod(e.target.value)}
-                            required
+        <div className="container d-flex justify-content-center align-items-center vh-100">
+            <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '600px' }}>
+                <h1 className="text-center mb-4">Payment</h1>
+                {orderDetails ? (
+                    <div className="text-center">
+                        <FaCheckCircle className="text-success mb-3" size={50} />
+                        <h2>Order Details</h2>
+                        <p><strong>Order ID:</strong> {orderDetails.id}</p>
+                        <p><strong>Total Amount:</strong> ${orderDetails.totalAmount.toFixed(2)}</p>
+                        <p><strong>Status:</strong> {orderDetails.status}</p>
+                        <p><strong>Payment Method:</strong> {orderDetails.payment.paymentMethod}</p>
+                        <button
+                            className="btn btn-primary w-100 mt-3"
+                            onClick={() => navigate('/dashboard')}
                         >
-                            <option value="">Select Payment Method</option>
-                            <option value="Credit Card">Credit Card</option>
-                            <option value="Debit Card">Debit Card</option>
-                            <option value="PayPal">PayPal</option>
-                        </select>
+                            Continue Shopping
+                        </button>
                     </div>
-                    <button
-                        className="btn btn-success"
-                        onClick={handlePayment}
-                    >
-                        Confirm Payment
-                    </button>
-                </div>
-            )}
+                ) : (
+                    <div>
+                        <h2>Payment Details</h2>
+                        {error && <div className="alert alert-danger">{error}</div>}
+                        <div className="mb-3">
+                            <label className="form-label">Payment Method</label>
+                            <select
+                                className="form-select"
+                                value={paymentMethod}
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                required
+                            >
+                                <option value="">Select Payment Method</option>
+                                <option value="Credit Card">
+                                    <FaCreditCard className="me-2" />
+                                    Credit Card
+                                </option>
+                                <option value="Debit Card">
+                                    <FaMoneyCheckAlt className="me-2" />
+                                    Debit Card
+                                </option>
+                                <option value="PayPal">
+                                    <FaPaypal className="me-2" />
+                                    PayPal
+                                </option>
+                            </select>
+                        </div>
+                        <button
+                            className="btn btn-success w-100"
+                            onClick={handlePayment}
+                            disabled={isProcessing || !paymentMethod}
+                        >
+                            {isProcessing ? (
+                                <div className="spinner-border spinner-border-sm" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            ) : (
+                                'Confirm Payment'
+                            )}
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
