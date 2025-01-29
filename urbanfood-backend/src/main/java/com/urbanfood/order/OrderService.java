@@ -21,10 +21,10 @@ public class OrderService {
     }
 
     public Order createOrder(Order order) {
-        // Save the order
+
         Order savedOrder = orderRepository.save(order);
 
-        // Increment the purchase count for each product in the order
+
         for (String productId : order.getProductIds()) {
             incrementProductPurchaseCount(productId);
         }

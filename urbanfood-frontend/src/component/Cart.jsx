@@ -5,8 +5,8 @@ import { FaTrash, FaShoppingCart, FaArrowRight } from 'react-icons/fa'; // Icons
 
 function Cart() {
     const [cart, setCart] = useState({ products: [], totalAmount: 0.0 });
-    const [loading, setLoading] = useState(true); // Loading state
-    const [error, setError] = useState(''); // Error state
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     // Fetch cart items
@@ -104,7 +104,7 @@ function Cart() {
                     <p>Your cart is empty.</p>
                     <button
                         className="btn btn-primary"
-                        onClick={() => navigate('/products')}
+                        onClick={() => navigate('/dashboard')}
                     >
                         Continue Shopping
                     </button>

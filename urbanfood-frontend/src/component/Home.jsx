@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaShoppingCart, FaArrowRight } from 'react-icons/fa'; // Icons from React Icons
+import { FaShoppingCart, FaArrowRight } from 'react-icons/fa';
 import MostPopularProducts from './MostPopularProducts';
 
 function Home() {

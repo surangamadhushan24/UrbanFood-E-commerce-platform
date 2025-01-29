@@ -16,7 +16,7 @@ function MostPopularProducts() {
                 console.error('Error fetching most popular products:', error);
                 setError('Failed to fetch most popular products. Please try again later.');
             } finally {
-                setLoading(false); // Reset loading state
+                setLoading(false);
             }
         };
 

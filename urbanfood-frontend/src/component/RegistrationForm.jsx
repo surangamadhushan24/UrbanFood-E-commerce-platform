@@ -9,15 +9,15 @@ function RegistrationForm() {
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [address, setAddress] = useState('');
-    const [role, setRole] = useState('USER'); // Default role is USER
+    const [role, setRole] = useState('USER');
     const [error, setError] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false); // Loading state for form submission
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); // Clear previous errors
-        setIsSubmitting(true); // Set loading state
+        setError('');
+        setIsSubmitting(true);
 
         try {
             const response = await axios.post('http://localhost:8080/register', {
@@ -36,7 +36,7 @@ function RegistrationForm() {
             console.error('Registration failed:', error);
             setError('Registration failed. Please check your details and try again.');
         } finally {
-            setIsSubmitting(false); // Reset loading state
+            setIsSubmitting(false);
         }
     };
 

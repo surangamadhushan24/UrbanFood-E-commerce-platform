@@ -23,8 +23,8 @@ function Card({ product, handleAddToCart }) {
                     <button
                         className="btn btn-outline-primary w-100"
                         onClick={(e) => {
-                            e.stopPropagation(); // Prevent navigation when clicking the button
-                            handleAddToCart(product); // Call the handleAddToCart function
+                            e.stopPropagation();
+                            handleAddToCart(product);
                         }}
                     >
                         Add to Cart

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { FaStar, FaComment } from 'react-icons/fa'; // Icons from React Icons
+import { FaStar, FaComment } from 'react-icons/fa';
 
 function ReviewForm({ productId, userId }) {
     const [rating, setRating] = useState(1);
     const [comment, setComment] = useState('');
     const [error, setError] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false); // Loading state for form submission
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); // Clear previous errors
-        setIsSubmitting(true); // Set loading state
+        setError('');
+        setIsSubmitting(true);
 
         try {
             const token = localStorage.getItem('token');

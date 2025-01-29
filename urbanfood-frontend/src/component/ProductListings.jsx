@@ -18,7 +18,7 @@ function ProductListings() {
         fetchProducts();
     }, []);
 
-    // Define handleAddToCart function
+
     const handleAddToCart = async (product) => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -29,7 +29,7 @@ function ProductListings() {
         try {
             const response = await axios.post(
                 'http://localhost:8080/api/v1/cart',
-                product, // Pass the full product object
+                product,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             alert('Product added to cart!');
@@ -42,13 +42,13 @@ function ProductListings() {
 
     return (
         <div className="container mt-5">
-            <h1>Product Listings</h1>
+            {/*<h1>Product Listings</h1>*/}
             <div className="row row-cols-1 row-cols-md-3 g-4">
                 {products.map((product) => (
                     <Card
                         key={product.id}
                         product={product}
-                        handleAddToCart={handleAddToCart} // Pass the function to Card
+                        handleAddToCart={handleAddToCart}
                     />
                 ))}
             </div>

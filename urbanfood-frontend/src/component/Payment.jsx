@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaCreditCard, FaMoneyCheckAlt, FaPaypal, FaCheckCircle } from 'react-icons/fa'; // Icons from React Icons
+import { FaCreditCard, FaMoneyCheckAlt, FaPaypal, FaCheckCircle } from 'react-icons/fa';
 
 function Payment() {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [orderDetails, setOrderDetails] = useState(null);
     const [error, setError] = useState('');
-    const [isProcessing, setIsProcessing] = useState(false); // Loading state for payment processing
+    const [isProcessing, setIsProcessing] = useState(false);
     const navigate = useNavigate();
 
     const handlePayment = async () => {
-        setError(''); // Clear previous errors
-        setIsProcessing(true); // Set loading state
+        setError('');
+        setIsProcessing(true);
 
         try {
             const token = localStorage.getItem('token');
@@ -75,14 +75,14 @@ function Payment() {
                 },
             });
 
-            // Set order details
+
             setOrderDetails(orderResponse.data);
             alert('Payment successful! Order created.');
         } catch (error) {
             console.error('Error during payment or order creation:', error);
             setError('Failed to process payment or create order. Please try again.');
         } finally {
-            setIsProcessing(false); // Reset loading state
+            setIsProcessing(false);
         }
     };
 

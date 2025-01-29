@@ -28,9 +28,9 @@ function AddProductForm() {
                     name,
                     description,
                     category,
-                    price: parseFloat(price), // Convert to number
+                    price: parseFloat(price),
                     image,
-                    stock: parseInt(stock, 10), // Convert to integer
+                    stock: parseInt(stock, 10),
                 },
                 {
                     headers: {
@@ -41,7 +41,7 @@ function AddProductForm() {
 
             console.log('Product added successfully:', response.data);
             alert('Product added successfully!');
-            navigate('/dashboard'); // Redirect to the dashboard or product listings
+            navigate('/dashboard');
         } catch (error) {
             console.error('Error adding product:', error);
             setError('Failed to add product. Please try again.');

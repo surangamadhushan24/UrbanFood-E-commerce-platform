@@ -21,24 +21,24 @@ public class CartService {
         if (cartOptional.isPresent()) {
             Cart cart = cartOptional.get();
 
-            // Check if the product already exists in the cart
+
             boolean productExists = cart.getProducts().stream()
                     .anyMatch(p -> p.getId().equals(product.getId()));
 
             if (!productExists) {
-                cart.getProducts().add(product); // Add the product if it doesn't exist
-                cart.setTotalAmount(cart.getTotalAmount() + product.getPrice()); // Update the total amount
-                return cartRepository.save(cart); // Save the updated cart
+                cart.getProducts().add(product);
+                cart.setTotalAmount(cart.getTotalAmount() + product.getPrice());
+                return cartRepository.save(cart);
             } else {
                 throw new RuntimeException("Product already exists in the cart!");
             }
         } else {
-            // If the cart does not exist, create a new one
+
             Cart cart = new Cart();
             cart.setUserId(userId);
-            cart.getProducts().add(product); // Add the product
-            cart.setTotalAmount(product.getPrice()); // Set the total amount
-            return cartRepository.save(cart); // Save the new cart
+            cart.getProducts().add(product);
+            cart.setTotalAmount(product.getPrice());
+            return cartRepository.save(cart);
         }
     }
 
@@ -53,22 +53,22 @@ public class CartService {
     }
 
     public Cart removeFromCart(String userId, String productId) {
-        // Find the cart for the given user ID
+
         Optional<Cart> cartOptional = cartRepository.findByUserId(userId);
 
         if (cartOptional.isPresent()) {
             Cart cart = cartOptional.get();
 
-            // Find the product to remove
+
             Optional<Product> productToRemove = cart.getProducts().stream()
                     .filter(p -> p.getId().equals(productId))
                     .findFirst();
 
             if (productToRemove.isPresent()) {
-                // Remove the product and update the total amount
+
                 cart.getProducts().remove(productToRemove.get());
                 cart.setTotalAmount(cart.getTotalAmount() - productToRemove.get().getPrice());
-                return cartRepository.save(cart); // Save the updated cart
+                return cartRepository.save(cart);
             } else {
                 throw new RuntimeException("Product not found in the cart!");
             }
@@ -81,9 +81,9 @@ public class CartService {
         Optional<Cart> cartOptional = cartRepository.findByUserId(userId);
         if (cartOptional.isPresent()) {
             Cart cart = cartOptional.get();
-            cart.getProducts().clear(); // Clear the products list
-            cart.setTotalAmount(0.0); // Reset the total amount
-            cartRepository.save(cart); // Save the updated cart
+            cart.getProducts().clear();
+            cart.setTotalAmount(0.0);
+            cartRepository.save(cart);
         } else {
             throw new RuntimeException("Cart not found for user ID: " + userId);
         }

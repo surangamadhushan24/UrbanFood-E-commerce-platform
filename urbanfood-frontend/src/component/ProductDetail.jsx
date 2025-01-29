@@ -33,7 +33,7 @@ function ProductDetail({ handleAddToCart }) {
     return (
         <div className="container mt-5">
             <h1>Product Detail Page</h1>
-            <p>Product ID: {id}</p>
+            {/*<p>Product ID: {id}</p>*/}
             <div className="row">
                 <div className="col-md-6">
                     <img
@@ -49,7 +49,7 @@ function ProductDetail({ handleAddToCart }) {
                     <p>Price: ${product.price}</p>
                     <button
                         className="btn btn-primary"
-                        onClick={() => handleAddToCart(product)} // Pass the full product object
+                        onClick={() => handleAddToCart(product)}
                     >
                         Add to Cart
                     </button>

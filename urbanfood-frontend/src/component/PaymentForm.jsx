@@ -11,7 +11,7 @@ function PaymentForm({ totalAmount, onPayment }) {
             setError('Please select a payment method.');
             return;
         }
-        setError(''); // Clear previous errors
+        setError('');
         onPayment({ paymentMethod });
     };
 
